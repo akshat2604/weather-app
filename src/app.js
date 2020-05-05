@@ -1,5 +1,13 @@
-const path = require('path'), express = require('express'), hbs = require('hbs'), geocode = require('./utils/geocode'), forecast = require('./utils/forecast'), app = express(), publicDirectoryPath = path.join(__dirname, '../public'), viewsPath = path.join(__dirname, '../templates/views'), partialsPath = path.join(__dirname, '../templates/partials')
-app.set('view engine', 'hbs');app.set('views', viewsPath);hbs.registerPartials(partialsPath);app.use(express.static(publicDirectoryPath))
+const path = require('path'),
+    express = require('express'),
+    hbs = require('hbs'),
+    forecast = require('./utils/forecast'),
+    app = express(),
+    publicDirectoryPath = path.join(__dirname, '../public'),
+    viewsPath = path.join(__dirname, '../templates/views'),
+    partialsPath = path.join(__dirname, '../templates/partials')
+app.set('view engine', 'hbs'); app.set('views', viewsPath); hbs.registerPartials(partialsPath); app.use(express.static(publicDirectoryPath))
+const port = process.env.PORT || 8080
 app.get('', (req, res) => {
     res.render('index', {
         title: 'Weather',
@@ -25,11 +33,11 @@ app.get('/weather', (req, res) => {
             error: 'You must provide an address!'
         })
     }
-    forecast(req.query.address,(error, forecastData) => {
-        if(error) {
+    forecast(req.query.address, (error, forecastData) => {
+        if (error) {
             return res.send({ error })
         }
-            res.send({
+        res.send({
             forecast: forecastData,
             address: req.query.address
         })
@@ -42,6 +50,6 @@ app.get('*', (req, res) => {
         errorMessage: 'Page not found.'
     })
 })
-app.listen(8080, () => {
-    console.log('Server is up on port 8080.')
+app.listen(port, () => {
+    console.log(`Server is up on port ${port} .`)
 })
